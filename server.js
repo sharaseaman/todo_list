@@ -11,5 +11,5 @@ app.listen(port, function(){
 
   app.get('/',function(req, res){
       console.log('sending html');
-      res.sendFile(path.join(__dirname + '../public/views/index.html'));
+      res.sendFile(path.join(__dirname + '/public/views/index.html'));
     });
