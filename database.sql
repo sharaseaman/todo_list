@@ -4,4 +4,3 @@ CREATE TABLE tasks (
 	complete BOOLEAN
 );
 
-INSERT INTO tasks (todo, complete) VALUES ('homework', false);

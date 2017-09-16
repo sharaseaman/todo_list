@@ -1,9 +1,9 @@
-var Pool = reqire('pg').Pool;
+var Pool = require('pg').Pool;
 
 var config = {
     host:'localhost',
     port: 5432,
-    database: 'tasks',
+    database: 'todo',
     max: 20,
 }
 
