@@ -2,7 +2,7 @@ console.log('client js is working');
 
 function onReady(){
     console.log('on ready working');
-  //  $('#addButton').on('click', getTasks);
+    $('#addButton').on('click', addTasks);
   getTasks();
 }
 
@@ -12,7 +12,7 @@ function getTasks(){
             method: 'GET',
             url: '/tasks',
             success: function(response){
-                console.log('getTasks working');
+                console.log('getTasks working', response);
             
         for (var i = 0; i < response.length; i++) {
             var $row = $('<tr></tr>');
@@ -29,5 +29,22 @@ function getTasks(){
      }
   });
 }
+
+function addTasks() {
+     var taskAdd = {
+     itemTask: $('#inputBox').val()
+     };
+
+     $.ajax({
+        method: 'POST',
+        url: '/tasks',
+        data: taskAdd,
+        success:function(response){
+            console.log("sucess working in addTasks");
+            getTasks();
+        }
+     });
+}
+
 
 $(document).ready(onReady);
