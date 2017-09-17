@@ -6,6 +6,7 @@ var pool = require('./modules/pool');
 var bodyParser = require('body-parser');
 
 
+
 //app.use(express.static('/public'));
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(express.static('public/'));
@@ -14,12 +15,13 @@ app.use(express.static('public/'));
 app.listen(port, function () {
     console.log('listening on port', port);
 });
-
+//index
 app.get('/', function (req, res) {
     console.log('sending html');
     res.sendFile(path.join(__dirname + '/public/views/index.html'));
 });
 
+//get tasks
 app.get('/tasks', function (req, res) {
     // console.log('in /tasks');
 
@@ -72,3 +74,26 @@ app.post('/tasks', function (req, res) {
         }
     });
 });
+
+app.delete('/tasks/:id', function(req,res){
+    console.log('app.delete ');
+    
+    var dbInfo = req.params.id;
+    console.log('app.delete function');
+    
+    pool.connect(function(connectionError, client, done){
+
+        if (connectionError){
+            res.sendStatus(500);
+        }else{
+            client.query('DELETE FROM tasks WHERE id=$1;', [dbInfo], function(queryError, resultsObj){
+                done();
+            if (queryError){
+                res.sendStatus(500);
+            } else {
+                res.sendStatus(200);
+            }
+            });
+        } 
+    });
+});//end app.delete 

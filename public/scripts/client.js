@@ -3,6 +3,7 @@ console.log('client js is working');
 function onReady(){
     console.log('on ready working');
     $('#addButton').on('click', addTasks);
+    $('#taskTable').on('click', '.deleteMe', deleteTask);
   getTasks();
 }
 
@@ -46,5 +47,20 @@ function addTasks() {
      });
 }
 
+function deleteTask(){
+    //console.log('deleteTask function');
+    
+    var thisId = $(this).data('id');
+    console.log('after var thisID', thisId);
+    
+    $.ajax({
+        method: 'DELETE',
+        url: '/tasks/' + thisId,
+        success: function(resp) {
+        console.log('server response is', resp);              
+        getTasks()
+        }
+    })
+}
 
 $(document).ready(onReady);
