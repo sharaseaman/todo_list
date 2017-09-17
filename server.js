@@ -4,96 +4,19 @@ var path = require('path');
 var port = 3000;
 var pool = require('./modules/pool');
 var bodyParser = require('body-parser');
-
+var index = require('./routes/index');
+var tasks = require('./routes/tasks');
 
 
 //app.use(express.static('/public'));
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(express.static('public/'));
 
+//routes
+app.use('/', index);
+app.use('/tasks', tasks);
+
 
 app.listen(port, function () {
     console.log('listening on port', port);
 });
-//index
-app.get('/', function (req, res) {
-    console.log('sending html');
-    res.sendFile(path.join(__dirname + '/public/views/index.html'));
-});
-
-//get tasks
-app.get('/tasks', function (req, res) {
-    // console.log('in /tasks');
-
-    pool.connect(function (connectionError, client, done) {
-        //  console.log('in pool connect');
-        if (connectionError) {
-            //  console.log('connection error if statement');    
-            res.sendStatus(500);
-        } else {
-            //console.log('i made it to the else');
-
-            client.query('SELECT * FROM tasks;', function (queryError, resultsObj) {
-                done();
-                if (queryError) {
-                    res.sendStatus(500);
-                } else {
-                    res.send(resultsObj.rows);
-                    console.log(resultsObj.rows);
-
-                }
-            });
-        }
-    });
-});
-
-app.post('/tasks', function (req, res) {
-    var newTask = req.body.itemTask;
-    console.log('in tasks post');
-    
-    pool.connect(function (connectionError, client, done) {
-        console.log('in pool connect post');
-        if (connectionError) {
-           console.log('in connectionError if ');
-            
-            res.sendStatus(500);
-        } else {
-            console.log('pool connect else');
-            
-            var param1 = 'INSERT INTO tasks (todo) VALUES ($1)';
-            var param2 = [newTask];
-            client.query(param1, param2, function (queryError, resultsObj) {
-                
-                    done();
-                    if (queryError) {
-                        res.sendStatus(500);
-                    } else {
-                        res.sendStatus(200);
-                    }
-                });
-        }
-    });
-});
-
-app.delete('/tasks/:id', function(req,res){
-    console.log('app.delete ');
-    
-    var dbInfo = req.params.id;
-    console.log('app.delete function');
-    
-    pool.connect(function(connectionError, client, done){
-
-        if (connectionError){
-            res.sendStatus(500);
-        }else{
-            client.query('DELETE FROM tasks WHERE id=$1;', [dbInfo], function(queryError, resultsObj){
-                done();
-            if (queryError){
-                res.sendStatus(500);
-            } else {
-                res.sendStatus(200);
-            }
-            });
-        } 
-    });
-});//end app.delete 

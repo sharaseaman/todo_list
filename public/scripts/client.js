@@ -4,6 +4,8 @@ function onReady(){
     console.log('on ready working');
     $('#addButton').on('click', addTasks);
     $('#taskTable').on('click', '.deleteMe', deleteTask);
+    $('#taskTable').on('click', '.completeMe', updateList);
+    
   getTasks();
 }
 
@@ -16,8 +18,8 @@ function getTasks(){
                 console.log('getTasks working', response);
                 
         for (var i = 0; i < response.length; i++) {
-            var $row = $('<tr></tr>');
-            $row.append('<td>' + response[i].todo + '</td>');
+            var $row = $('<tr type="checkbox"></tr>');
+            $row.append('<td>' + response[i].todo + '</td>' );
 
             var $completeButton =$('<td><button class="completeMe" data-id="' + response[i].id + '">Complete</button></td>');
             $row.append($completeButton);
@@ -57,11 +59,37 @@ function deleteTask(){
     $.ajax({
         method: 'DELETE',
         url: '/tasks/' + thisId,
-        success: function(resp) {
+        success: function(response) {
         //console.log('server response is', resp);              
         getTasks()
         }
     })
+}
+
+function updateList(){
+    console.log('in the updateList');
+    var thisIdcomp = $(this).data('id');
+    var thisIdput = $(this).data('complete');
+    
+    var taskSend = {
+        id: thisIdcomp,
+        complete: thisIdput
+    };
+      //console.log('did i make it here');
+      
+    $.ajax({        
+        method: 'PUT',
+        url: '/tasks/' + thisIdcomp,
+        data: taskSend,
+        success: function(response){
+            console.log('i made it to update success');
+            getTasks();
+        }
+    })
+}
+
+function changeComp(){
+
 }
 
 $(document).ready(onReady);
