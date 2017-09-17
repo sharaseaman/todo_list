@@ -14,7 +14,7 @@ function getTasks(){
             url: '/tasks',
             success: function(response){
                 console.log('getTasks working', response);
-            
+                
         for (var i = 0; i < response.length; i++) {
             var $row = $('<tr></tr>');
             $row.append('<td>' + response[i].todo + '</td>');
@@ -35,7 +35,8 @@ function addTasks() {
      var taskAdd = {
      itemTask: $('#inputBox').val()
      };
-
+     $('#inputBox').val(''),
+     
      $.ajax({
         method: 'POST',
         url: '/tasks',
@@ -51,13 +52,13 @@ function deleteTask(){
     //console.log('deleteTask function');
     
     var thisId = $(this).data('id');
-    console.log('after var thisID', thisId);
+    //console.log('after var thisID', thisId);
     
     $.ajax({
         method: 'DELETE',
         url: '/tasks/' + thisId,
         success: function(resp) {
-        console.log('server response is', resp);              
+        //console.log('server response is', resp);              
         getTasks()
         }
     })
