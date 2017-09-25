@@ -9,7 +9,7 @@ var tasks = require('./routes/tasks');
 
 
 //app.use(express.static('/public'));
-app.use(bodyParser.urlencoded({ extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public/'));
 
 //routes
